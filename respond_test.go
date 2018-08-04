@@ -19,7 +19,7 @@ func TestDecodeBody(t *testing.T) {
 	json := `{"name":"creativeName"}`
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(json))
 	var r teststruct
-	decodeBody(req, &r)
+	DecodeBody(req, &r)
 	assert.Equal(t, "creativeName", r.Name)
 }
 
@@ -30,7 +30,7 @@ func TestEncodeBody(t *testing.T) {
 	r := teststruct{
 		Name: "superCreative",
 	}
-	encodeBody(rec, req, &r)
+	EncodeBody(rec, req, &r)
 	assert.JSONEq(t, `{"name":"superCreative"}`, rec.Body.String())
 }
 
