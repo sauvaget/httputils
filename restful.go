@@ -6,15 +6,11 @@ import (
 	"strings"
 )
 
-type restFilters struct {
-	pagination pagination
-	filters    map[string][]string
-}
+// Pagination defines the pagination vars
+type Pagination map[string]int
 
-type pagination struct {
-	limit int64
-	page  int64
-}
+// FilterList defines the filterlist vars
+type FilterList map[string][]string
 
 // GetFilters parses the URL for a querystring and responds with the restful filters
 func GetFilters(u *url.URL) (map[string]int, map[string][]string, error) {
