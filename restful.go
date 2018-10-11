@@ -19,12 +19,12 @@ type pagination struct {
 // GetFilters parses the URL for a querystring and responds with the restful filters
 func GetFilters(u *url.URL) (map[string]int, map[string][]string, error) {
 	// Set some default values
-	var p map[string]int
+	p := make(map[string]int)
 	p["limit"] = 100
 	p["page"] = 1
 
 	// Set empty filters
-	var f map[string][]string
+	f := make(map[string][]string)
 
 	queryVals := u.Query()
 	if val, ok := queryVals["limit"]; ok {
