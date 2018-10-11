@@ -17,35 +17,37 @@ type pagination struct {
 }
 
 // GetFilters parses the URL for a querystring and responds with the restful filters
-func GetFilters(u *url.URL) (restFilters, error) {
+func GetFilters(u *url.URL) (map[string]int, map[string][]string, error) {
 	// Set some default values
-	var rf restFilters
-	rf.pagination.limit = 100
-	rf.pagination.page = 1
+	var p map[string]int
+	p["limit"] = 100
+	p["page"] = 1
+
+	// Set empty filters
+	var f map[string][]string
 
 	queryVals := u.Query()
 	if val, ok := queryVals["limit"]; ok {
 		limit, err := strconv.ParseInt(val[0], 10, 64)
 		if err != nil {
-			return rf, err
+			return p, f, err
 		}
-		rf.pagination.limit = limit
+		p["limit"] = int(limit)
 		delete(queryVals, "limit")
 	}
 
 	if val, ok := queryVals["page"]; ok {
 		page, err := strconv.ParseInt(val[0], 10, 64)
 		if err != nil {
-			return rf, err
+			return p, f, err
 		}
-		rf.pagination.page = page
+		p["page"] = int(page)
 		delete(queryVals, "page")
 	}
 
-	rf.filters = make(map[string][]string)
 	for key, val := range queryVals {
-		rf.filters[key] = strings.Split(val[0], ",")
+		f[key] = strings.Split(val[0], ",")
 	}
 
-	return rf, nil
+	return p, f, nil
 }
