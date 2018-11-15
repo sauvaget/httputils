@@ -7,17 +7,18 @@ import (
 )
 
 // Pagination defines the pagination vars
-type Pagination map[string]int
+type Pagination map[string]interface{}
 
 // FilterList defines the filterlist vars
 type FilterList map[string][]string
 
 // GetFilters parses the URL for a querystring and responds with the restful filters
-func GetFilters(u *url.URL) (map[string]int, map[string][]string, error) {
+func GetFilters(u *url.URL) (map[string]interface{}, map[string][]string, error) {
 	// Set some default values
-	p := make(map[string]int)
+	p := make(map[string]interface{})
 	p["limit"] = 100
 	p["page"] = 1
+	p["sort"] = ""
 
 	// Set empty filters
 	f := make(map[string][]string)
@@ -39,6 +40,11 @@ func GetFilters(u *url.URL) (map[string]int, map[string][]string, error) {
 		}
 		p["page"] = int(page)
 		delete(queryVals, "page")
+	}
+
+	if val, ok := queryVals["sort"]; ok {
+		p["sort"] = val[0]
+		delete(queryVals, "sort")
 	}
 
 	for key, val := range queryVals {
